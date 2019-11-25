@@ -6,6 +6,7 @@ import numpy as np
 df = pd.read_csv("data.csv")
 #GoalKeeping Characteristics
 '''
+adding some other comment
 May be applicable:
 Stamina
 Strength
