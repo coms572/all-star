@@ -3,7 +3,9 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 
-df = pd.read_csv("data.csv")
+dataset = pd.read_csv("data.csv") #Do not spoil this dataset
+df=dataset
+
 #GoalKeeping Characteristics
 '''
 May be applicable:
