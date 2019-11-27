@@ -41,3 +41,11 @@ Striker= df[(df['Position'] == 'ST') | (df['Position'] == 'LS') | (df['Position'
 df['WingForward']= 5*(df.Finishing+df.HeadingAccuracy+df.Acceleration) + 4*(df.LongShots+df.Crossing+df.Dribbling+df.BallControl+df.SprintSpeed) + 3*(df.FKAccuracy+df.Aggression+df.Agility+df.Vision+df.ShortPassing+df.LongPassing)+df.Curve
 LeftForward= df[(df['Position'] == 'LW') | (df['Position'] == 'LM') | (df['Position'] == 'LS') | (df['Position'] == 'LF')].sort_values('WingForward', ascending=False)[:18207]
 RightForward= df[(df['Position'] == 'RW') | (df['Position'] == 'RM') | (df['Position'] == 'RS') | (df['Position'] == 'RF')].sort_values('WingForward', ascending=False)[:18207]
+
+#Number of players:
+tName1 = 'Real Madrid'
+tName2 = 'FC Barcelona'
+team1 = pd.DataFrame(df[(df['Club'] == tName1)],columns=['Name','Club','Overall','Position'])
+team2 = pd.DataFrame(df[(df['Club'] == tName2)],columns=['Name','Club','Overall','Position'])
+tgk1 = pd.DataFrame(GoalKeeper[(GoalKeeper['Club'] == tName1)])
+tgk2 = pd.DataFrame(GoalKeeper[(GoalKeeper['Club'] == tName2)])
