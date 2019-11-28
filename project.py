@@ -47,14 +47,29 @@ tName1 = 'Real Madrid'
 tName2 = 'FC Barcelona'
 team1 = pd.DataFrame(df[(df['Club'] == tName1)])
 team2 = pd.DataFrame(df[(df['Club'] == tName2)])
+teamDict = {}
 gk = pd.DataFrame(GoalKeeper[(GoalKeeper['Club'] == tName1) | (GoalKeeper['Club'] == tName2)])
+teamDict['GK'] = gk.to_dict('list')['Name']
 lcd = pd.DataFrame(LeftCentralDefender[(LeftCentralDefender['Club'] == tName1) | (LeftCentralDefender['Club'] == tName2)])
+teamDict['LCD'] = lcd.to_dict('list')['Name']
 rcd = pd.DataFrame(RightCentralDefender[(RightCentralDefender['Club'] == tName1) | (RightCentralDefender['Club'] == tName2)])
+teamDict['RCD'] = rcd.to_dict('list')['Name']
 lwb = pd.DataFrame(LeftWingBack[(LeftWingBack['Club'] == tName1) | (LeftWingBack['Club'] == tName2)])
+teamDict['LWB'] = lwb.to_dict('list')['Name']
 rwb = pd.DataFrame(RightWingBack[(RightWingBack['Club'] == tName1) | (RightWingBack['Club'] == tName2)])
+teamDict['RWB'] = rwb.to_dict('list')['Name']
 cm = pd.DataFrame(CentralMid[(CentralMid['Club'] == tName1) | (CentralMid['Club'] == tName2)])
+teamDict['CM'] = cm.to_dict('list')['Name']
 rm = pd.DataFrame(RightMid[(RightMid['Club'] == tName1) | (RightMid['Club'] == tName2)])
+teamDict['RM'] = rm.to_dict('list')['Name']
 lm = pd.DataFrame(LeftMid[(LeftMid['Club'] == tName1) | (LeftMid['Club'] == tName2)])
+teamDict['LM'] = lm.to_dict('list')['Name']
 st = pd.DataFrame(Striker[(Striker['Club'] == tName1) | (Striker['Club'] == tName2)])
+teamDict['ST'] = st.to_dict('list')['Name']
 lf = pd.DataFrame(LeftForward[(LeftForward['Club'] == tName1) | (LeftForward['Club'] == tName2)])
+teamDict['LF'] = lf.to_dict('list')['Name']
 rf = pd.DataFrame(RightForward[(RightForward['Club'] == tName1) | (RightForward['Club'] == tName2)])
+teamDict['RF'] = rf.to_dict('list')['Name']
+
+allstar = pd.DataFrame.from_dict(teamDict, orient = 'index')
+allstar = allstar.transpose()
