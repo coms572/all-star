@@ -84,7 +84,7 @@ teamDict[10] = rf.to_dict('list')['Name']
 allstar = pd.DataFrame.from_dict(teamDict, orient = 'index')
 allstar = allstar.transpose()
 
-gka=np.array(teamDict['GK'])
+'''gka=np.array(teamDict['GK'])
 lcda=np.array(teamDict['LCD'])
 rcda=np.array(teamDict['RCD'])
 lwba=np.array(teamDict['LWB'])
@@ -95,6 +95,38 @@ lma=np.array(teamDict['LM'])
 sta=np.array(teamDict['ST'])
 lfa=np.array(teamDict['LF'])
 rfa=np.array(teamDict['RF'])
+'''
+
+def getOverall(teamDict,i,j):
+    pname=teamDict[i][j]
+    if i==0:
+         poverall=gk[(gk['Name']==pname)]['Overall']
+    elif i==1:
+         poverall=lcd[(lcd['Name']==pname)]['Overall']
+    elif i==2:
+         poverall=rcd[(rcd['Name']==pname)]['Overall']
+    elif i==3:
+         poverall=lwb[(lwb['Name']==pname)]['Overall']
+    elif i==4:
+         poverall=rwb[(rwb['Name']==pname)]['Overall']
+    elif i==5:
+         poverall=cm[(cm['Name']==pname)]['Overall']
+    elif i==6:
+         poverall=rm[(rm['Name']==pname)]['Overall']
+    elif i==7:
+         poverall=lm[(lm['Name']==pname)]['Overall']
+    elif i==8:
+         poverall=st[(st['Name']==pname)]['Overall']
+    elif i==9:
+         poverall=lf[(lf['Name']==pname)]['Overall']
+    elif i==10:
+         poverall=rf[(rf['Name']==pname)]['Overall']
+        
+    
+    return poverall
+
+print(teamDict[3][0])
+print(getOverall(teamDict,3,0))
 def checkPossibiliy(teamDict,i,j):
     
 def optimalTeam(teamDict):
