@@ -48,27 +48,57 @@ team1 = pd.DataFrame(df[(df['Club'] == tName1)])
 team2 = pd.DataFrame(df[(df['Club'] == tName2)])
 teamDict = {}
 gk = pd.DataFrame(GoalKeeper[(GoalKeeper['Club'] == tName1) | (GoalKeeper['Club'] == tName2)])
-teamDict['GK'] = gk.to_dict('list')['Name']
+teamDict[0] = gk.to_dict('list')['Name']
+#0 GoalKeeper
 lcd = pd.DataFrame(LeftCentralDefender[(LeftCentralDefender['Club'] == tName1) | (LeftCentralDefender['Club'] == tName2)])
-teamDict['LCD'] = lcd.to_dict('list')['Name']
+teamDict[1] = lcd.to_dict('list')['Name']
+#1 LCD
 rcd = pd.DataFrame(RightCentralDefender[(RightCentralDefender['Club'] == tName1) | (RightCentralDefender['Club'] == tName2)])
-teamDict['RCD'] = rcd.to_dict('list')['Name']
+teamDict[2] = rcd.to_dict('list')['Name']
+#2 RCD
 lwb = pd.DataFrame(LeftWingBack[(LeftWingBack['Club'] == tName1) | (LeftWingBack['Club'] == tName2)])
-teamDict['LWB'] = lwb.to_dict('list')['Name']
+teamDict[3] = lwb.to_dict('list')['Name']
+#3 LWB
 rwb = pd.DataFrame(RightWingBack[(RightWingBack['Club'] == tName1) | (RightWingBack['Club'] == tName2)])
-teamDict['RWB'] = rwb.to_dict('list')['Name']
+teamDict[4] = rwb.to_dict('list')['Name']
+#4 RWB
 cm = pd.DataFrame(CentralMid[(CentralMid['Club'] == tName1) | (CentralMid['Club'] == tName2)])
-teamDict['CM'] = cm.to_dict('list')['Name']
+teamDict[5] = cm.to_dict('list')['Name']
+#5 CM
 rm = pd.DataFrame(RightMid[(RightMid['Club'] == tName1) | (RightMid['Club'] == tName2)])
-teamDict['RM'] = rm.to_dict('list')['Name']
+teamDict[6] = rm.to_dict('list')['Name']
+#6 RM
 lm = pd.DataFrame(LeftMid[(LeftMid['Club'] == tName1) | (LeftMid['Club'] == tName2)])
-teamDict['LM'] = lm.to_dict('list')['Name']
+teamDict[7] = lm.to_dict('list')['Name']
+#7 LM
 st = pd.DataFrame(Striker[(Striker['Club'] == tName1) | (Striker['Club'] == tName2)])
-teamDict['ST'] = st.to_dict('list')['Name']
+teamDict[8] = st.to_dict('list')['Name']
+#8 ST
 lf = pd.DataFrame(LeftForward[(LeftForward['Club'] == tName1) | (LeftForward['Club'] == tName2)])
 teamDict['LF'] = lf.to_dict('list')['Name']
+#9 LF
 rf = pd.DataFrame(RightForward[(RightForward['Club'] == tName1) | (RightForward['Club'] == tName2)])
 teamDict['RF'] = rf.to_dict('list')['Name']
+#10 RF
 
 allstar = pd.DataFrame.from_dict(teamDict, orient = 'index')
 allstar = allstar.transpose()
+
+gka=np.array(teamDict['GK'])
+lcda=np.array(teamDict['LCD'])
+rcda=np.array(teamDict['RCD'])
+lwba=np.array(teamDict['LWB'])
+rwba=np.array(teamDict['RWB'])
+cma=np.array(teamDict['CM'])
+rma=np.array(teamDict['RM'])
+lma=np.array(teamDict['LM'])
+sta=np.array(teamDict['ST'])
+lfa=np.array(teamDict['LF'])
+rfa=np.array(teamDict['RF'])
+def checkPossibiliy(teamDict,i,j):
+    
+def optimalTeam(teamDict):
+    
+    
+
+
