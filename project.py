@@ -45,7 +45,16 @@ RightForward= df[(df['Position'] == 'RW') | (df['Position'] == 'RM') | (df['Posi
 #Number of players:
 tName1 = 'Real Madrid'
 tName2 = 'FC Barcelona'
-team1 = pd.DataFrame(df[(df['Club'] == tName1)],columns=['Name','Club','Overall','Position'])
-team2 = pd.DataFrame(df[(df['Club'] == tName2)],columns=['Name','Club','Overall','Position'])
-tgk1 = pd.DataFrame(GoalKeeper[(GoalKeeper['Club'] == tName1)])
-tgk2 = pd.DataFrame(GoalKeeper[(GoalKeeper['Club'] == tName2)])
+team1 = pd.DataFrame(df[(df['Club'] == tName1)])
+team2 = pd.DataFrame(df[(df['Club'] == tName2)])
+gk = pd.DataFrame(GoalKeeper[(GoalKeeper['Club'] == tName1) | (GoalKeeper['Club'] == tName2)])
+lcd = pd.DataFrame(LeftCentralDefender[(LeftCentralDefender['Club'] == tName1) | (LeftCentralDefender['Club'] == tName2)])
+rcd = pd.DataFrame(RightCentralDefender[(RightCentralDefender['Club'] == tName1) | (RightCentralDefender['Club'] == tName2)])
+lwb = pd.DataFrame(LeftWingBack[(LeftWingBack['Club'] == tName1) | (LeftWingBack['Club'] == tName2)])
+rwb = pd.DataFrame(RightWingBack[(RightWingBack['Club'] == tName1) | (RightWingBack['Club'] == tName2)])
+cm = pd.DataFrame(CentralMid[(CentralMid['Club'] == tName1) | (CentralMid['Club'] == tName2)])
+rm = pd.DataFrame(RightMid[(RightMid['Club'] == tName1) | (RightMid['Club'] == tName2)])
+lm = pd.DataFrame(LeftMid[(LeftMid['Club'] == tName1) | (LeftMid['Club'] == tName2)])
+st = pd.DataFrame(Striker[(Striker['Club'] == tName1) | (Striker['Club'] == tName2)])
+lf = pd.DataFrame(LeftForward[(LeftForward['Club'] == tName1) | (LeftForward['Club'] == tName2)])
+rf = pd.DataFrame(RightForward[(RightForward['Club'] == tName1) | (RightForward['Club'] == tName2)])
