@@ -12,6 +12,89 @@ import numpy as np
 dataset = pd.read_csv("data.csv") #Do not spoil this dataset
 df=dataset
 
+def getOverall(teamDict,i,j):
+    pname=teamDict[i][j]
+    if i==0:
+         poverall=gk[(gk['Name']==pname)]['Overall'] 
+         pos = 'gk'
+    elif i==1:
+         poverall=lcd[(lcd['Name']==pname)]['Overall']
+         pos = 'lcd'
+    elif i==2:
+         poverall=rcd[(rcd['Name']==pname)]['Overall']
+         pos = 'rcd'
+    elif i==3:
+         poverall=lwb[(lwb['Name']==pname)]['Overall']
+         pos = 'lwb'
+    elif i==4:
+         poverall=rwb[(rwb['Name']==pname)]['Overall']
+         pos = 'rwb'
+    elif i==5:
+         poverall=cm[(cm['Name']==pname)]['Overall']
+         pos = 'cm'
+    elif i==6:
+         poverall=rm[(rm['Name']==pname)]['Overall']
+         pos = 'rm'
+    elif i==7:
+         poverall=lm[(lm['Name']==pname)]['Overall']
+         pos = 'lm'
+    elif i==8:
+         poverall=st[(st['Name']==pname)]['Overall']
+         pos = 'st'
+    elif i==9:
+         poverall=lf[(lf['Name']==pname)]['Overall']
+         pos = 'lf'
+    elif i==10:
+         poverall=rf[(rf['Name']==pname)]['Overall']        
+         pos = 'rf'
+    
+    return (pos,int(poverall))
+
+def checkBudget(remBudget,overall):
+    
+    if overall > remBudget:
+        return False
+    else:
+        return True
+    
+def checkPossibility(teamDict,i,budget):
+    b = budget
+    a=i+1
+    if a==10:
+        for k in range(len(teamDict[i+1])):
+            pos,overall= getOverall(teamDict,a,k)
+            if checkBudget(b,overall):
+                return True
+            else:
+                return False
+    elif a < 10:
+        for k in range(len(teamDict[i+1])):
+            pos,overall= getOverall(teamDict,a,k)
+            if checkBudget(b,overall):
+                if checkPossibility(teamDict,a,b-overall):
+                    return True
+                else:
+                    return False
+    return False
+def optimalTeam(teamDict,budget):
+    b = budget   
+    allstarTeam = {'gk':'','lcd':'','rcd':'','lwb':'','rwb':'','cm':'','rm':'','lm':'','st':'','lf':'','rf':''}
+    for i in range(len(teamDict)):
+        for j in range(len(teamDict[i])):
+            pos,overall = getOverall(teamDict,i,j)   
+            #import pdb;pdb.set_trace();
+            if checkBudget(b,overall):
+                if i==10:
+                    b = b - overall
+                    allstarTeam[pos] = teamDict[i][j]
+                    break 
+                else: 
+                    if checkPossibility(teamDict,i,b-overall):
+                        b = b - overall
+                        allstarTeam[pos] = teamDict[i][j]
+                        break      
+    return allstarTeam
+
 df['GoalKeeper']=df.GKDiving+df.GKHandling+df.GKKicking+df.GKPositioning+df.GKReflexes+df.LongPassing+df.LongShots+df.Jumping
 GoalKeeper = df[df['Position'] == 'GK'].sort_values('GoalKeeper', ascending=False)[:18207]
 
@@ -97,40 +180,15 @@ lfa=np.array(teamDict['LF'])
 rfa=np.array(teamDict['RF'])
 '''
 
-def getOverall(teamDict,i,j):
-    pname=teamDict[i][j]
-    if i==0:
-         poverall=gk[(gk['Name']==pname)]['Overall']
-    elif i==1:
-         poverall=lcd[(lcd['Name']==pname)]['Overall']
-    elif i==2:
-         poverall=rcd[(rcd['Name']==pname)]['Overall']
-    elif i==3:
-         poverall=lwb[(lwb['Name']==pname)]['Overall']
-    elif i==4:
-         poverall=rwb[(rwb['Name']==pname)]['Overall']
-    elif i==5:
-         poverall=cm[(cm['Name']==pname)]['Overall']
-    elif i==6:
-         poverall=rm[(rm['Name']==pname)]['Overall']
-    elif i==7:
-         poverall=lm[(lm['Name']==pname)]['Overall']
-    elif i==8:
-         poverall=st[(st['Name']==pname)]['Overall']
-    elif i==9:
-         poverall=lf[(lf['Name']==pname)]['Overall']
-    elif i==10:
-         poverall=rf[(rf['Name']==pname)]['Overall']
-        
-    
-    return poverall
+#print(teamDict[3][0])
+#print(getOverall(teamDict,3,0))
 
-print(teamDict[3][0])
-print(getOverall(teamDict,3,0))
-def checkPossibiliy(teamDict,i,j):
-    
-def optimalTeam(teamDict):
-    
+test=optimalTeam(teamDict,900)
+print (test)
+
+                
+                
+            
     
     
 
