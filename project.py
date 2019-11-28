@@ -75,10 +75,10 @@ st = pd.DataFrame(Striker[(Striker['Club'] == tName1) | (Striker['Club'] == tNam
 teamDict[8] = st.to_dict('list')['Name']
 #8 ST
 lf = pd.DataFrame(LeftForward[(LeftForward['Club'] == tName1) | (LeftForward['Club'] == tName2)])
-teamDict['LF'] = lf.to_dict('list')['Name']
+teamDict[9] = lf.to_dict('list')['Name']
 #9 LF
 rf = pd.DataFrame(RightForward[(RightForward['Club'] == tName1) | (RightForward['Club'] == tName2)])
-teamDict['RF'] = rf.to_dict('list')['Name']
+teamDict[10] = rf.to_dict('list')['Name']
 #10 RF
 
 allstar = pd.DataFrame.from_dict(teamDict, orient = 'index')
@@ -98,6 +98,7 @@ rfa=np.array(teamDict['RF'])
 def checkPossibiliy(teamDict,i,j):
     
 def optimalTeam(teamDict):
+    
     
     
 
