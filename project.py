@@ -58,31 +58,43 @@ def checkBudget(remBudget,overall):
         return True
     
 def checkPossibility(teamDict,i,budget):
+    #import pdb;pdb.set_trace();
     b = budget
     a=i+1
     if a==10:
-        for k in range(len(teamDict[i+1])):
-            pos,overall= getOverall(teamDict,a,k)
-            if checkBudget(b,overall):
-                return True
-            else:
-                return False
-    elif a < 10:
-        for k in range(len(teamDict[i+1])):
-            pos,overall= getOverall(teamDict,a,k)
-            if checkBudget(b,overall):
-                if checkPossibility(teamDict,a,b-overall):
+        for k in range(len(teamDict[a])):
+            if k == len(teamDict[a])-1:
+                pos,overall= getOverall(teamDict,a,k)
+                if checkBudget(b,overall):
                     return True
                 else:
                     return False
-    return False
+            else:
+                pos,overall= getOverall(teamDict,a,k)
+                if checkBudget(b,overall):
+                    return True            
+                else:
+                    continue
+    else:
+        for k in range(len(teamDict[a])):
+                pos,overall= getOverall(teamDict,a,k)
+                if checkBudget(b,overall):
+                    if checkPossibility(teamDict,a,b-overall):
+                        return True
+                    else:
+                        if  k == len(teamDict[a])-1:
+                            return False
+                        else:
+                            continue
+            
+            
+            
 def optimalTeam(teamDict,budget):
     b = budget   
     allstarTeam = {'gk':'','lcd':'','rcd':'','lwb':'','rwb':'','cm':'','rm':'','lm':'','st':'','lf':'','rf':''}
     for i in range(len(teamDict)):
         for j in range(len(teamDict[i])):
-            pos,overall = getOverall(teamDict,i,j)   
-            #import pdb;pdb.set_trace();
+            pos,overall = getOverall(teamDict,i,j)               
             if checkBudget(b,overall):
                 if i==10:
                     b = b - overall
@@ -184,6 +196,7 @@ rfa=np.array(teamDict['RF'])
 #print(getOverall(teamDict,3,0))
 
 test=optimalTeam(teamDict,900)
+#cp = checkPossibility(teamDict,1,800)
 print (test)
 
                 
