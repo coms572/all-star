@@ -117,7 +117,7 @@ allstarTeamPositions = {
 
 def getOverall(teamDict,i,j):
     '''
-    Get fixed Overall score from the specified team at (i, j)
+    Get fixed Overall score and position for the specified index in teamDict
     '''
     player_name = teamDict[i][j]
     pos = list(allstarTeamPositions.keys())[i]
@@ -128,24 +128,15 @@ def getOverall(teamDict,i,j):
 def checkPossibility(teamDict,i,budget):
     #import pdb;pdb.set_trace();
     b = budget
-    a=i+1
-    if a==10:
-        for k in range(len(teamDict[a])):
-            _, overall= getOverall(teamDict,a,k)
-            if overall <= b:
-                return True
-        return False
+    nexti=i+1
+    if nexti==10:
+        # Return whether there's any player in our budget
+        return any(getOverall(teamDict,nexti,k)[1] <= b for k in range(len(teamDict[nexti])))
     else:
-        for k in range(len(teamDict[a])):
-            _, overall= getOverall(teamDict,a,k)
-            if overall <= b:
-                if checkPossibility(teamDict,a,b-overall):
-                    return True
-                else:
-                    if  k == len(teamDict[a])-1:
-                        return False
-                    
-                    continue
+        # All Overalls for the next position to consider
+        overalls = (getOverall(teamDict,nexti,k)[1] for k in range(len(teamDict[nexti])))
+        # Check if there's any possibility within all Overall scores that are in our budget
+        return any(checkPossibility(teamDict, nexti, b - overall) for overall in overalls if overall <= b)
                         
 def optimalTeam(teamDict,budget):
     '''
@@ -166,17 +157,12 @@ def optimalTeam(teamDict,budget):
     allstarTeam = {'gk':'','lcd':'','rcd':'','lwb':'','rwb':'','cm':'','rm':'','lm':'','st':'','lf':'','rf':''}
     for i in range(len(teamDict)):
         for j in range(len(teamDict[i])):
-            pos,overall = getOverall(teamDict,i,j)    
+            pos, overall = getOverall(teamDict,i,j)    
             if overall <= b:
-                if i==10:
+                if i==10 or checkPossibility(teamDict,i,b-overall):
                     b = b - overall
                     allstarTeam[pos] = teamDict[i][j]
-                    break 
-                else: 
-                    if checkPossibility(teamDict,i,b-overall):
-                        b = b - overall
-                        allstarTeam[pos] = teamDict[i][j]
-                        break      
+                    break
     return allstarTeam
 
 test=optimalTeam(teamDict,900)
