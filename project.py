@@ -145,7 +145,7 @@ def checkPossibility(teamDict,i,budget):
     # All costs to consider for the next position
     costs = getAllCostsInPosition(teamDict, nexti)
 
-    if nexti==10:
+    if nexti == len(teamDict) - 1:
         # Return whether there's any player in our budget
         return any(o <= b for o in costs)
     else:
@@ -173,7 +173,7 @@ def optimalTeam(teamDict,budget):
         for j in range(len(teamDict[i])):
             pos, cost = getCost(teamDict,i,j)    
             if cost <= b:
-                if i==10 or checkPossibility(teamDict, i, b - cost):
+                if i == len(teamDict) - 1 or checkPossibility(teamDict, i, b - cost):
                     b = b - cost
                     allstarTeam[pos] = teamDict[i][j]
                     break
