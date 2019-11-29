@@ -124,13 +124,6 @@ def getOverall(teamDict,i,j):
     records = allstarTeamPositions[pos]
     player_overall = int(records[records.Name == player_name]['Overall'])
     return (pos, player_overall)
-
-def checkBudget(remBudget,overall):
-    
-    if overall > remBudget:
-        return False
-    else:
-        return True
     
 def checkPossibility(teamDict,i,budget):
     #import pdb;pdb.set_trace();
@@ -138,29 +131,21 @@ def checkPossibility(teamDict,i,budget):
     a=i+1
     if a==10:
         for k in range(len(teamDict[a])):
-            if k == len(teamDict[a])-1:
-                pos,overall= getOverall(teamDict,a,k)
-                if checkBudget(b,overall):
-                    return True
-                else:
-                    return False
-            else:
-                pos,overall= getOverall(teamDict,a,k)
-                if checkBudget(b,overall):
-                    return True            
-                else:
-                    continue
+            _, overall= getOverall(teamDict,a,k)
+            if overall <= b:
+                return True
+        return False
     else:
         for k in range(len(teamDict[a])):
-                pos,overall= getOverall(teamDict,a,k)
-                if checkBudget(b,overall):
-                    if checkPossibility(teamDict,a,b-overall):
-                        return True
-                    else:
-                        if  k == len(teamDict[a])-1:
-                            return False
-                        else:
-                            continue
+            _, overall= getOverall(teamDict,a,k)
+            if overall <= b:
+                if checkPossibility(teamDict,a,b-overall):
+                    return True
+                else:
+                    if  k == len(teamDict[a])-1:
+                        return False
+                    
+                    continue
                         
 def optimalTeam(teamDict,budget):
     '''
@@ -182,7 +167,7 @@ def optimalTeam(teamDict,budget):
     for i in range(len(teamDict)):
         for j in range(len(teamDict[i])):
             pos,overall = getOverall(teamDict,i,j)    
-            if checkBudget(b,overall):
+            if overall <= b:
                 if i==10:
                     b = b - overall
                     allstarTeam[pos] = teamDict[i][j]
