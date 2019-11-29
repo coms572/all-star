@@ -124,19 +124,32 @@ def getOverall(teamDict,i,j):
     records = allstarTeamPositions[pos]
     player_overall = int(records[records.Name == player_name]['Overall'])
     return (pos, player_overall)
+
+def getAllOverallsInPosition(teamDict, i):
+    '''
+    Get all overalls in position i in teamDict
+    '''
+    
+    return (getOverall(teamDict,i,k)[1] for k in range(len(teamDict[i])))
     
 def checkPossibility(teamDict,i,budget):
+    '''
+    Check if there's a feasible team in teamDict,
+    given budget and starting at position i
+    '''
     #import pdb;pdb.set_trace();
     b = budget
     nexti=i+1
+    
+    # All Overalls to consider for the next position
+    overalls = getAllOverallsInPosition(teamDict, nexti)
+
     if nexti==10:
         # Return whether there's any player in our budget
-        return any(getOverall(teamDict,nexti,k)[1] <= b for k in range(len(teamDict[nexti])))
+        return any(o <= b for o in overalls)
     else:
-        # All Overalls for the next position to consider
-        overalls = (getOverall(teamDict,nexti,k)[1] for k in range(len(teamDict[nexti])))
         # Check if there's any possibility within all Overall scores that are in our budget
-        return any(checkPossibility(teamDict, nexti, b - overall) for overall in overalls if overall <= b)
+        return any(checkPossibility(teamDict, nexti, b - o) for o in overalls if o <= b)
                         
 def optimalTeam(teamDict,budget):
     '''
