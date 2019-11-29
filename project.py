@@ -5,9 +5,9 @@ Created on Mon Nov 25 16:49:45 2019
 """
 
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-import numpy as np
+# import seaborn as sns
+# import matplotlib.pyplot as plt
+# import numpy as np
 
 dataset = pd.read_csv("data.csv") #Do not spoil this dataset
 df=dataset
@@ -98,7 +98,7 @@ rfa=np.array(teamDict['RF'])
 '''
 
 #print(teamDict[3][0])
-#print(getOverall(teamDict,3,0))
+#print(getCost(teamDict,3,0))
 
 # The indices for each team position
 allstarTeamPositions = {
@@ -115,22 +115,23 @@ allstarTeamPositions = {
     'rf': rf
 }
 
-def getOverall(teamDict,i,j):
+def getCost(teamDict,i,j):
     '''
-    Get fixed Overall score and position for the specified index in teamDict
+    Get cost and position for the player at the specified index in teamDict.
+    We're currently using Overall score as the cost for each player.
     '''
     player_name = teamDict[i][j]
     pos = list(allstarTeamPositions.keys())[i]
     records = allstarTeamPositions[pos]
-    player_overall = int(records[records.Name == player_name]['Overall'])
-    return (pos, player_overall)
+    player_cost = int(records[records.Name == player_name]['Overall'])
+    return (pos, player_cost)
 
-def getAllOverallsInPosition(teamDict, i):
+def getAllCostsInPosition(teamDict, i):
     '''
-    Get all overalls in position i in teamDict
+    Get all costs in position i in teamDict.
     '''
     
-    return (getOverall(teamDict,i,k)[1] for k in range(len(teamDict[i])))
+    return (getCost(teamDict,i,k)[1] for k in range(len(teamDict[i])))
     
 def checkPossibility(teamDict,i,budget):
     '''
@@ -141,15 +142,15 @@ def checkPossibility(teamDict,i,budget):
     b = budget
     nexti=i+1
     
-    # All Overalls to consider for the next position
-    overalls = getAllOverallsInPosition(teamDict, nexti)
+    # All costs to consider for the next position
+    costs = getAllCostsInPosition(teamDict, nexti)
 
     if nexti==10:
         # Return whether there's any player in our budget
-        return any(o <= b for o in overalls)
+        return any(o <= b for o in costs)
     else:
-        # Check if there's any possibility within all Overall scores that are in our budget
-        return any(checkPossibility(teamDict, nexti, b - o) for o in overalls if o <= b)
+        # Check if there's any possibility within all costs that are in our budget
+        return any(checkPossibility(teamDict, nexti, b - o) for o in costs if o <= b)
                         
 def optimalTeam(teamDict,budget):
     '''
@@ -170,10 +171,10 @@ def optimalTeam(teamDict,budget):
     allstarTeam = {'gk':'','lcd':'','rcd':'','lwb':'','rwb':'','cm':'','rm':'','lm':'','st':'','lf':'','rf':''}
     for i in range(len(teamDict)):
         for j in range(len(teamDict[i])):
-            pos, overall = getOverall(teamDict,i,j)    
-            if overall <= b:
-                if i==10 or checkPossibility(teamDict,i,b-overall):
-                    b = b - overall
+            pos, cost = getCost(teamDict,i,j)    
+            if cost <= b:
+                if i==10 or checkPossibility(teamDict, i, b - cost):
+                    b = b - cost
                     allstarTeam[pos] = teamDict[i][j]
                     break
     return allstarTeam
