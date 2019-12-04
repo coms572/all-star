@@ -100,6 +100,8 @@ rfa=np.array(teamDict['RF'])
 #print(teamDict[3][0])
 #print(getCost(teamDict,3,0))
 
+# Backtracking
+
 # The indices for each team position
 allstarTeamPositions = {
     'gk': gk,
@@ -179,7 +181,56 @@ def optimalTeam(teamDict,budget):
                     break
     return allstarTeam
 
-test=optimalTeam(teamDict,900)
+import random
+import math
+
+# Annealing Search
+
+def replaceRandom(current, allPlayers):
+    pos = random.choice(current.keys())
+    current[pos] = random.choice(allPlayers[pos])
+
+schedule = [n / 100 for n in range(0, 100)]
+schedule.reverse()
+
+def value(team, budget):
+    # TODO: Balance team value with budget
+    pass
+
+def annealingSearch(initialState, allPlayers, budget):
+    current = initialState
+    t = 1
+    while True:
+        T = schedule[t]
+        if T is 0:
+            return current
+        else:
+            next = replaceRandom(current)
+            E = value(next, budget) - value(current, budget)
+            if E > 0:
+                current = next
+            else:
+                # only with probability e^(E/T)
+                rand = random.randint(0, pow(math.e, E/T))
+                if (rand == 0):
+                    current = next
+
+initial = {
+    'gk': random.choice(gk.Name),
+    'lcd': random.choice(lcd.Name),
+    'rcd': random.choice(rcd.Name),
+    'lwb': random.choice(lwb.Name),
+    'rwb': random.choice(rwb.Name),
+    'cm': random.choice(cm.Name),
+    'rm': random.choice(rm.Name),
+    'lm': random.choice(lm.Name),
+    'st': random.choice(st.Name),
+    'lf': random.choice(lf.Name),
+    'rf': random.choice(rf.Name)
+}
+t = annealingSearch(initial, teamDict, 900)
+
+test = optimalTeam(teamDict,900)
 #cp = checkPossibility(teamDict,1,800)
 print (test)
 
