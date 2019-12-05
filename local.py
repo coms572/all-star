@@ -85,14 +85,15 @@ def fancy_sort(df):
     Add h2 to df and sort df by h2.
     '''
     sorted_df = df[['Overall', 'Skills', 'Name']].copy()
-    sorted_df['Evaluation'] =  df['Skills'] / df['Overall']
-    sorted_df.sort_values(by='Evaluation')
+    sorted_df[evaluationColumn] =  df['Skills'] / df['Overall']
+    sorted_df.sort_values(by=evaluationColumn)
     sorted_df = sorted_df.reset_index()
     return sorted_df
 
 import pandas as pd
 
-budget = 900
+budget = 870
+evaluationColumn = 'Evaluation'
 
 sorted_players = { posName: fancy_sort(pos.df) for posName, pos in positions.items() }
 all_dfs = [df for df in sorted_players.values()]

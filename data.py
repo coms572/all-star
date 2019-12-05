@@ -143,6 +143,8 @@ rfh = pd.DataFrame(RightForward_h[(RightForward_h['Club'] == tName1) | (RightFor
 teamDictH[10] = rfh.to_dict('list')['Name']
 #10 RF
 
+# Normalize skills
+
 from collections import namedtuple
 PositionRef = namedtuple('PositionRef', ['df', 'name', 'skills_name', 'index'])
 
@@ -164,9 +166,10 @@ def add_normal_skill(df, specialSkillName):
     df['Skills'] = df[specialSkillName]
     df['Skills'] = df['Skills'] / df['Skills'].max() * 100
 
-# gk['Skills'] = gk['Goalkeeper']
 for pos in positions.keys():
     add_normal_skill(positions[pos].df, positions[pos].skills_name)
+
+# Final df's
 
 allstar = pd.DataFrame.from_dict(teamDict, orient = 'index')
 allstar = allstar.transpose()

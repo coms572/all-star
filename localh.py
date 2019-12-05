@@ -34,7 +34,7 @@ def value(team):
     if (cost_difference == 0):
         return 0
     
-    weight = mean([all_players[all_players.Name == name].Evaluation.values[0] for name in team.values()])
+    weight = mean([all_players[all_players.Name == name][evaluationColumn].values[0] for name in team.values()])
     val = cost_difference * weight
     
     return val
@@ -84,23 +84,29 @@ def fancy_sort(df):
     '''
     Add h2 to df and sort df by h2.
     '''
-    sorted_df = df[['Overall', 'Skills', 'Name']].copy()
-    sorted_df['Evaluation'] =  df['Skills'] / df['Overall']
-    sorted_df.sort_values(by='Evaluation')
+    sorted_df = df[[evaluationColumn, 'Overall', 'Name']].copy()
+    # sorted_df['Evaluation'] =  df['Skills'] / df['Overall']
+    sorted_df.sort_values(by=evaluationColumn)
     sorted_df = sorted_df.reset_index()
     return sorted_df
 
 import pandas as pd
 
 budget = 900
+evaluationColumn = 'PlayerHeuristic'
 
 sorted_players = { posName: fancy_sort(pos.df) for posName, pos in positions.items() }
 all_dfs = [df for df in sorted_players.values()]
 all_players = pd.concat(all_dfs)
 
-initial = { pos: df[df.Evaluation == df.Evaluation.max()].Name.values[0] for pos, df in sorted_players.items() }
+initial = { pos: df[df[evaluationColumn] == df[evaluationColumn].max()].Name.values[0] for pos, df in sorted_players.items() }
 t = localSearch(initial)
 print('team value', value(t))
 print('sum cost', cost(t))
-print('sum skills', sum([all_players[all_players.Name == t[pos]].Skills.values[0] for pos in t]))
+
+def get_skills(pos):
+    h = all_players[all_players.Name == t[pos]][evaluationColumn].values[0]
+    overall = all_players[all_players.Name == t[pos]]['Overall'].values[0]
+    return h * overall
+print('sum skills', sum([get_skills(pos) for pos in t]))
 tval = value(initial)
