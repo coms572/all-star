@@ -9,9 +9,17 @@ def replaceNext(team, teamDict, pos):
 
     # TODO: pre-sort each position in teamDict by cost?
     
-    # TODO
+    pos = i_to_pos(pos)
+    pos_players = allstarTeamPositions[pos]
+    players = pos_players.loc[:, ['Name', 'Overall']].sort_values('Overall', ascending = True)
+    players.reset_index(inplace = True)
+    for i, p in players.iterrows():
+        if i == len(players) - 1:
+            return None
+        if p.Name == team[pos]:
+            return players.iloc[i + 1]
     
-    pass
+    return None
 
 def value(team, budget):
     '''
@@ -85,6 +93,8 @@ def aStarSearch(initial, teamDict, budget):# Create start and end node
 
             # Get team of next node
             next_team = replaceNext(current_node.team, teamDict, pos)
+            if next_team is None:
+                continue
 
             # Make sure within range
             if isInBudget(next_team, budget):
