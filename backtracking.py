@@ -4,7 +4,7 @@ Created on Mon Nov 25 16:49:45 2019
 @author: bhatt
 """
 
-from data import *
+from data import teamDict, allstarTeamPositions
 
 def getCost(teamDict,i,j):
     '''
@@ -69,47 +69,6 @@ def optimalTeam(teamDict,budget):
                     allstarTeam[pos] = teamDict[i][j]
                     break
     return allstarTeam
-
-import random
-import math
-
-# Annealing Search
-
-def replaceRandom(current, allPlayers):
-    pos = random.choice(current.keys())
-    current[pos] = random.choice(allPlayers[pos])
-
-schedule = [n / 100 for n in range(0, 100)]
-schedule.reverse()
-
-def value(team, budget):
-    '''
-    return the distance from the team cost to the budget,
-    scaled by the team value.
-    Between two teams with the same cost,
-    the one with higher value should have a higher evaluation.
-    '''
-
-    # TODO: Calculate it.
-
-    pass
-
-def aStarSearch(initial, teamDict, budget):
-
-    # TODO: A star search
-
-    return initial
-
-def get_min_cost(teamDict, i):
-    '''
-    returns the name of the player in
-    the position at index i who has the minimum cost.
-    '''
-
-    return ''
-
-initial = { pos: get_min_cost(teamDict, i) for i, pos in enumerate(teamDict.keys()) }
-# t = aStarSearch(initial, teamDict, 900)
 
 test = optimalTeam(teamDict,900)
 #cp = checkPossibility(teamDict,1,800)
