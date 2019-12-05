@@ -1,33 +1,28 @@
-from data import teamDict, allstarTeamPositions
+from data import positions
 from data import df as full_df
 
 # A* Search
 
-def replaceNext(team, teamDict, pos):
+def replaceNext(team, pos):
     '''
     replace the player in team at pos with the next most costly in teamDict.
     '''
 
-    # TODO: pre-sort each position in teamDict by cost?
+    # TODO: pre-sort each position in teamDict by evaluation?
     
-    next = None
-    pos = i_to_pos(pos)
-    pos_players = allstarTeamPositions[pos]
-    players = pos_players.loc[:, ['Name', 'Overall']].sort_values('Overall', ascending = True)
-    players.reset_index(inplace = True)
-    for i, p in players.iterrows():
-        if i == len(players) - 1:
-            return None
-        if p.Name == team[pos]:
-            next = players.iloc[[i + 1]]
-            
-    if next is None:
+    name = team[pos]
+    df = sorted_players[pos]
+    player_idx = df.index[df.Name == name]
+    if player_idx == df.shape[0] - 1:
         return None
-    else:
-        team[pos] = next
-        return team
+   
+    next_name = df.iloc[player_idx+1].Name.values[0]
+    team[pos] = next_name
+    return team
 
-def value(team, budget):
+from statistics import mean
+
+def value(team):
     '''
     return the distance from the team cost to the budget,
     scaled by the team value.
@@ -35,11 +30,17 @@ def value(team, budget):
     the one with higher value should have a higher evaluation.
     '''
     
-    val = budget - cost(team)
+    team_cost = cost(team)
+    cost_difference = budget - team_cost
+    if (cost_difference == 0):
+        return 0
     
-    return val if val > 0 else 0
+    weight = mean([all_players[all_players.Name == name].Evaluation.values[0] for name in team.values()])
+    val = cost_difference * weight
+    
+    return val
 
-def isInBudget(team, budget):
+def isInBudget(team):
     '''
     return whether a given team fits the budget.
     '''
@@ -51,13 +52,56 @@ def cost(team):
     '''
     
     sum = 0
-    for pos, player in team:
-        sum += full_df.loc[full_df.Name == team].Overall
+    for pos, name in team.items():
+        sum += full_df.loc[full_df.Name == name].Overall.values[0]
     
     return sum
 
-def localSearch(initial, teamDict, budget):
+def succ(team):
+    best = team
+    for pos in team:
+        n = replaceNext(team, pos)
+        if n is None or cost(n) > budget:
+            continue
 
-initialPlayer = None
-initialPos = 0
-t = aStarSearch(initial, teamDict, 900)
+        if value(n) > value(best):
+            best = n
+        
+    return best
+
+def localSearch(initial):
+    current = initial
+    while True:
+        neighbor = succ(current)
+        if neighbor is None:
+            break
+        
+        if value(neighbor) <= value(current):
+            return current
+        else:
+            current = neighbor
+
+def fancy_sort(df):
+    '''
+    Add h2 to df and sort df by h2.
+    '''
+    sorted_df = df[['Overall', 'Skills', 'Name']].copy()
+    sorted_df['Evaluation'] =  df['Skills'] / df['Overall']
+    sorted_df.sort_values(by='Evaluation')
+    sorted_df = sorted_df.reset_index()
+    return sorted_df
+
+import pandas as pd
+
+budget = 900
+
+sorted_players = { posName: fancy_sort(pos.df) for posName, pos in positions.items() }
+all_dfs = [df for df in sorted_players.values()]
+all_players = pd.concat(all_dfs)
+
+initial = { pos: df[df.Evaluation == df.Evaluation.max()].Name.values[0] for pos, df in sorted_players.items() }
+t = localSearch(initial)
+print('team value', value(t))
+print('sum cost', cost(t))
+print('sum skills', sum([all_players[all_players.Name == t[pos]].Skills.values[0] for pos in t]))
+tval = value(initial)

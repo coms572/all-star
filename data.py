@@ -75,6 +75,31 @@ rf = pd.DataFrame(RightForward[(RightForward['Club'] == tName1) | (RightForward[
 teamDict[10] = rf.to_dict('list')['Name']
 #10 RF
 
+from collections import namedtuple
+PositionRef = namedtuple('PositionRef', ['df', 'name', 'skills_name', 'index'])
+
+positions = {
+    'gk': PositionRef(name='gk', df=gk, skills_name='GoalKeeper', index=0),
+    'lcd': PositionRef(name='lcd', df=lcd, skills_name='CentralDefender', index=1),
+    'rcd': PositionRef(name='rcd', df=rcd, skills_name='CentralDefender', index=2),
+    'lwb': PositionRef(name='lwb', df=lwb, skills_name='WingBack', index=3),
+    'rwb': PositionRef(name='rwb', df=rwb, skills_name='WingBack', index=4),
+    'cm': PositionRef(name='cm', df=cm, skills_name='CentralMid', index=5),
+    'rm': PositionRef(name='rm', df=rm, skills_name='RightMid', index=6),
+    'lm': PositionRef(name='lm', df=lm, skills_name='LeftMid', index=7),
+    'st': PositionRef(name='st', df=st, skills_name='Striker', index=8),
+    'lf': PositionRef(name='lf', df=lf, skills_name='WingForward', index=9),
+    'rf': PositionRef(name='rf', df=rf, skills_name='WingForward', index=10),
+}
+
+def add_normal_skill(df, specialSkillName):
+    df['Skills'] = df[specialSkillName]
+    df['Skills'] = df['Skills'] / df['Skills'].max() * 100
+
+# gk['Skills'] = gk['Goalkeeper']
+for pos in positions.keys():
+    add_normal_skill(positions[pos].df, positions[pos].skills_name)
+
 allstar = pd.DataFrame.from_dict(teamDict, orient = 'index')
 allstar = allstar.transpose()
 
