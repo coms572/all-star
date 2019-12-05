@@ -1,5 +1,4 @@
 from data import positions
-from data import df as full_df
 
 # A* Search
 
@@ -53,7 +52,7 @@ def cost(team):
     
     sum = 0
     for pos, name in team.items():
-        sum += full_df.loc[full_df.Name == name].Overall.values[0]
+        sum += all_players.loc[all_players.Name == name].Overall.values[0]
     
     return sum
 
