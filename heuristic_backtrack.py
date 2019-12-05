@@ -1,32 +1,40 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Dec  5 12:43:09 2019
+
+@author: rishabhbhatt
+"""
+
 # -*- coding: utf-8 -*-
 """
 Created on Mon Nov 25 16:49:45 2019
 @author: bhatt
 """
 
-from data import teamDictH,teamDict, allstarTeamPositions
+from data import teamDictH, allstarTeamPositions
 
-def getCost(teamDict,i,j):
+def getCost(teamDictH,i,j):
     '''
-    Get cost and position for the player at the specified index in teamDict.
+    Get cost and position for the player at the specified index in teamDictH.
     We're currently using Overall score as the cost for each player.
     '''
-    player_name = teamDict[i][j]
+    player_name = teamDictH[i][j]
     pos = list(allstarTeamPositions.keys())[i]
     records = allstarTeamPositions[pos]
     player_cost = int(records[records.Name == player_name]['Overall'])
     return (pos, player_cost)
 
-def getAllCostsInPosition(teamDict, i):
+def getAllCostsInPosition(teamDictH, i):
     '''
-    Get all costs in position i in teamDict.
+    Get all costs in position i in teamDictH.
     '''
     
-    return (getCost(teamDict,i,k)[1] for k in range(len(teamDict[i])))
+    return (getCost(teamDictH,i,k)[1] for k in range(len(teamDictH[i])))
     
-def checkPossibility(teamDict,i,budget):
+def checkPossibility(teamDictH,i,budget):
     '''
-    Check if there's a feasible team in teamDict,
+    Check if there's a feasible team in teamDictH,
     given budget and starting at position i
     '''
     #import pdb;pdb.set_trace();
@@ -34,16 +42,16 @@ def checkPossibility(teamDict,i,budget):
     nexti=i+1
     
     # All costs to consider for the next position
-    costs = getAllCostsInPosition(teamDict, nexti)
+    costs = getAllCostsInPosition(teamDictH, nexti)
 
-    if nexti == len(teamDict) - 1:
+    if nexti == len(teamDictH) - 1:
         # Return whether there's any player in our budget
         return any(o <= b for o in costs)
     else:
         # Check if there's any possibility within all costs that are in our budget
-        return any(checkPossibility(teamDict, nexti, b - o) for o in costs if o <= b)
+        return any(checkPossibility(teamDictH, nexti, b - o) for o in costs if o <= b)
                         
-def optimalTeam(teamDict,budget):
+def optimalTeam(teamDictH,budget):
     '''
     gk: Goalkeeper
     lcd: Left Central Defender
@@ -60,19 +68,18 @@ def optimalTeam(teamDict,budget):
 
     b = budget   
     allstarTeam = {'gk':'','lcd':'','rcd':'','lwb':'','rwb':'','cm':'','rm':'','lm':'','st':'','lf':'','rf':''}
-    for i in range(len(teamDict)):
-        for j in range(len(teamDict[i])):
-            pos, cost = getCost(teamDict,i,j)    
+    for i in range(len(teamDictH)):
+        for j in range(len(teamDictH[i])):
+            pos, cost = getCost(teamDictH,i,j)    
             if cost <= b:
-                if i == len(teamDict) - 1 or checkPossibility(teamDict, i, b - cost):
+                if i == len(teamDictH) - 1 or checkPossibility(teamDictH, i, b - cost):
                     b = b - cost
-                    allstarTeam[pos] = teamDict[i][j]
+                    allstarTeam[pos] = teamDictH[i][j]
                     break
     return allstarTeam
 
-#test = optimalTeam(teamDict,900)
-test = optimalTeam(teamDictH,850)
-#cp = checkPossibility(teamDict,1,800)
+test = optimalTeam(teamDictH,800)
+#cp = checkPossibility(teamDictH,1,800)
 print (test)
 
                 
