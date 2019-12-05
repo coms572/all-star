@@ -17,7 +17,7 @@ def replaceNext(team, teamDict, pos):
         if i == len(players) - 1:
             return None
         if p.Name == team[pos]:
-            return players.iloc[i + 1]
+            return players.iloc[[i + 1]]
     
     return None
 
@@ -57,7 +57,7 @@ class Node():
         self.f = 0
 
     def __eq__(self, other):
-        return self.team == other.team
+        return self.team.equals(other.team)
 
 def aStarSearch(initial, teamDict, budget):# Create start and end node
     start_node = Node(None, initial)
