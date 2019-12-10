@@ -1,10 +1,32 @@
 import pandas as pd
-# import seaborn as sns
-# import matplotlib.pyplot as plt
+import seaborn as sns
+import matplotlib.pyplot as plt
+import math
 # import numpy as np
 
 dataset = pd.read_csv("data.csv") #Do not spoil this dataset
 df=dataset
+
+def compare_cost_measures():
+    graph_df = pd.DataFrame(df[['Overall']])
+    def m(s):
+        s = s.replace('r(€|K|M)', '')
+        if len(s) < 3:
+            return 0
+        return math.floor(float(s[1:-1]))
+    graph_df['ValueInt'] = df[['Value']].applymap(m)
+    graph_df['WageInt'] = df[['Wage']].applymap(m)
+    
+    plt.figure(figsize=(15,6))
+    fig, ax = plt.subplots()
+    ax = sns.scatterplot(x='Overall', y='ValueInt', data=graph_df, ax=ax, color='teal', alpha=0.2)
+    ax2 = ax.twinx()
+    ax2.spines['left'].set_color('teal')
+    ax2.spines['right'].set_color('orange')
+    sns.scatterplot(x='Overall', y='WageInt', data=graph_df, ax=ax2, color='orange', alpha=0.2)
+    plt.show()
+    
+compare_cost_measures()
 
 df['GoalKeeper']=df.GKDiving+df.GKHandling+df.GKKicking+df.GKPositioning+df.GKReflexes+df.LongPassing+df.LongShots+df.Jumping
 GoalKeeper = df[df['Position'] == 'GK'].sort_values('GoalKeeper', ascending=False)[:18207]
