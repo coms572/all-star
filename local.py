@@ -35,9 +35,9 @@ def value(team):
     if (cost_difference == 0):
         return 0
     
-    #weight = mean([all_players[all_players.Name == name].Evaluation.values[0] for name in team.values()])
-    #val = cost_difference * weight
-    val = sum([all_players[all_players.Name == name].Evaluation.values[0] for name in team.values()])
+    weight = mean([all_players[all_players.Name == name].Evaluation.values[0] for name in team.values()])
+    val = cost_difference * weight
+    #val = sum([all_players[all_players.Name == name].Evaluation.values[0] for name in team.values()])
     
     return val
 
