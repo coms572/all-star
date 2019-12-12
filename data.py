@@ -201,6 +201,15 @@ def add_normal_skill(df, specialSkillName):
 for pos in positions.keys():
     add_normal_skill(positions[pos].df, positions[pos].skills_name)
 
+for pos in positions.keys():
+    add_normal_skill(df, positions[pos].skills_name)
+
+# Graph player heuristic
+def graph_h():
+    plt.figure(figsize=(10,6))
+    sns.scatterplot(x='Overall', y='Skills', data=df, color='olive')
+    plt.show()
+#graph_h()
 
 # Final df's
 
