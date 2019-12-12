@@ -1,4 +1,4 @@
-from data import positions
+from data import  positions, budget
 
 # A* Search
 
@@ -16,8 +16,9 @@ def replaceNext(team, pos):
         return None
    
     next_name = df.iloc[player_idx+1].Name.values[0]
-    team[pos] = next_name
-    return team
+    next_team = team.copy()
+    next_team[pos] = next_name
+    return next_team
 
 from statistics import mean
 
@@ -34,8 +35,9 @@ def value(team):
     if (cost_difference == 0):
         return 0
     
-    weight = mean([all_players[all_players.Name == name].Evaluation.values[0] for name in team.values()])
-    val = cost_difference * weight
+    #weight = mean([all_players[all_players.Name == name].Evaluation.values[0] for name in team.values()])
+    #val = cost_difference * weight
+    val = sum([all_players[all_players.Name == name].Evaluation.values[0] for name in team.values()])
     
     return val
 
@@ -56,51 +58,84 @@ def cost(team):
     
     return sum
 
+import random
+
 def succ(team):
-    best = team
+    ret = []
     for pos in team:
-        n = replaceNext(team, pos)
+        n = replaceNext(team, pos) # Maybe should replace from team
         if n is None or cost(n) > budget:
             continue
 
-        if value(n) > value(best):
-            best = n
+        if value(n) < value(team):
+            ret.append(n)
         
-    return best
+    return random.choice(ret) if len(ret) > 0 else None
 
 def localSearch(initial):
     current = initial
+    count = 0
     while True:
         neighbor = succ(current)
         if neighbor is None:
             break
         
-        if value(neighbor) <= value(current):
-            return current
+        if value(neighbor) > value(current):
+            break
         else:
+            count += 1
             current = neighbor
+
+        
+    print('%d iterations' % count)
+    return current
 
 def fancy_sort(df):
     '''
     Add h2 to df and sort df by h2.
     '''
-    sorted_df = df[['Overall', 'Skills', 'Name']].copy()
-    sorted_df[evaluationColumn] =  df['Skills'] / df['Overall']
-    sorted_df.sort_values(by=evaluationColumn)
+    sorted_df = df[['Overall', 'NormalSkills', 'Skills', 'Name']].copy()
+    sorted_df['Evaluation'] =  df['NormalSkills'] / df['Overall']
+    sorted_df = sorted_df.sort_values(by='Evaluation', ascending = False)
     sorted_df = sorted_df.reset_index()
     return sorted_df
 
 import pandas as pd
 
-budget = 870
 evaluationColumn = 'Evaluation'
 
 sorted_players = { posName: fancy_sort(pos.df) for posName, pos in positions.items() }
+
 all_dfs = [df for df in sorted_players.values()]
 all_players = pd.concat(all_dfs)
 
-initial = { pos: df[df.Evaluation == df.Evaluation.max()].Name.values[0] for pos, df in sorted_players.items() }
+
+
+# import seaborn as sns
+# import matplotlib.pyplot as plt
+
+
+# plt.figure(figsize=(10,6))
+# sns.scatterplot(x='Overall', y='NormalSkills', data=all_players, color='orange')
+# plt.show()
+
+
+initial = { pos: df.iloc[0].Name for pos, df in sorted_players.items() }
+# import random
+# initial = { pos: random.choice(df.Name) for pos, df in sorted_players.items() }
+init_cost = cost(initial)
+print('min budget: %d' % init_cost)
+if budget < init_cost:
+    raise Exception('the budget must be greater than or equal to %d.' % init_cost)
+
+import time
+start_time = time.time()
 t = localSearch(initial)
+end_time = time.time()
+print("Local search, budget %d: %s ms" % (budget, ((end_time - start_time) * 100)))
+
+#print('initial: %s' % initial)
+#print('goal:    %s' % t)
 print('team value', value(t))
 print('sum cost', cost(t))
 print('sum skills', sum([all_players[all_players.Name == t[pos]].Skills.values[0] for pos in t]))

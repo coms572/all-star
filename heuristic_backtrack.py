@@ -12,7 +12,7 @@ Created on Mon Nov 25 16:49:45 2019
 @author: bhatt
 """
 
-from data import teamDictH, allstarTeamPositions
+from data import teamDictH, allstarTeamPositions, budget
 
 def getCost(teamDictH,i,j):
     '''
@@ -78,14 +78,12 @@ def optimalTeam(teamDictH,budget):
                     break
     return allstarTeam
 
-test = optimalTeam(teamDictH,800)
+import time
+start_time = time.time()
+test = optimalTeam(teamDictH, budget)
+end_time = time.time()
+print("H backtracking search, budget %d: %s ms" % (budget, ((end_time - start_time) * 100)))
 #cp = checkPossibility(teamDictH,1,800)
-print (test)
-
-                
-                
-            
-    
-    
-
-
+# print (test)
+print('Overall: %d' % sum([allstarTeamPositions[pos][allstarTeamPositions[pos].Name == name].Overall.values[0] for pos, name in test.items()]))
+print('Skills: %d' % sum([allstarTeamPositions[pos][allstarTeamPositions[pos].Name == name].Skills.values[0] for pos, name in test.items()]))

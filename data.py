@@ -6,6 +6,7 @@ import math
 
 dataset = pd.read_csv("data.csv") #Do not spoil this dataset
 df=dataset
+budget = 1000
 
 def compare_cost_measures():
     graph_df = pd.DataFrame(df[['Overall']])
@@ -17,16 +18,17 @@ def compare_cost_measures():
     graph_df['ValueInt'] = df[['Value']].applymap(m)
     graph_df['WageInt'] = df[['Wage']].applymap(m)
     
-    plt.figure(figsize=(15,6))
-    fig, ax = plt.subplots()
-    ax = sns.scatterplot(x='Overall', y='ValueInt', data=graph_df, ax=ax, color='teal', alpha=0.2)
-    ax2 = ax.twinx()
-    ax2.spines['left'].set_color('teal')
-    ax2.spines['right'].set_color('orange')
-    sns.scatterplot(x='Overall', y='WageInt', data=graph_df, ax=ax2, color='orange', alpha=0.2)
+    plt.figure(figsize=(10,6))
+    sns.scatterplot(x='Overall', y='WageInt', data=graph_df, color='orange', alpha=0.2)
+    # fig, ax = plt.subplots()
+    # ax = sns.scatterplot(x='Overall', y='ValueInt', data=graph_df, ax=ax, color='teal', alpha=0.2)
+    # ax2 = ax.twinx()
+    # ax2.spines['left'].set_color('teal')
+    # ax2.spines['right'].set_color('orange')
+    # sns.scatterplot(x='Overall', y='WageInt', data=graph_df, ax=ax2, color='orange', alpha=0.2)
     plt.show()
     
-compare_cost_measures()
+# compare_cost_measures()
 
 df['GoalKeeper']=df.GKDiving+df.GKHandling+df.GKKicking+df.GKPositioning+df.GKReflexes+df.LongPassing+df.LongShots+df.Jumping
 GoalKeeper = df[df['Position'] == 'GK'].sort_values('GoalKeeper', ascending=False)[:18207]
@@ -165,7 +167,7 @@ rfh = pd.DataFrame(RightForward_h[(RightForward_h['Club'] == tName1) | (RightFor
 teamDictH[10] = rfh.to_dict('list')['Name']
 #10 RF
 
-# Normalize skills
+# Organize positions
 
 from collections import namedtuple
 PositionRef = namedtuple('PositionRef', ['df', 'name', 'skills_name', 'index'])
@@ -184,12 +186,21 @@ positions = {
     'rf': PositionRef(name='rf', df=rf, skills_name='WingForward', index=10),
 }
 
+# Check budget
+
+min_team_cost = sum([df[df.Overall == df.Overall.min()].Overall.values[0] for pos in positions.keys()])
+if budget < min_team_cost:
+    raise Exception('the budget must be greater than or equal to %d.' % min_team_cost)
+
+# Normalize skills
+
 def add_normal_skill(df, specialSkillName):
     df['Skills'] = df[specialSkillName]
-    df['Skills'] = df['Skills'] / df['Skills'].max() * 100
+    df['NormalSkills'] = df['Skills'] / df['Skills'].max() * 100
 
 for pos in positions.keys():
     add_normal_skill(positions[pos].df, positions[pos].skills_name)
+
 
 # Final df's
 

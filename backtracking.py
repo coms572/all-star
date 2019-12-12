@@ -4,7 +4,7 @@ Created on Mon Nov 25 16:49:45 2019
 @author: bhatt
 """
 
-from data import teamDictH,teamDict, allstarTeamPositions
+from data import teamDictH,teamDict, allstarTeamPositions, budget
 
 def getCost(teamDict,i,j):
     '''
@@ -70,10 +70,16 @@ def optimalTeam(teamDict,budget):
                     break
     return allstarTeam
 
+import time
+start_time = time.time()
+test = optimalTeam(teamDict,budget)
+end_time = time.time()
+print("Normal backtracking search, budget %d: %s ms" % (budget, ((end_time - start_time) * 100)))
+
 #test = optimalTeam(teamDict,900)
-test = optimalTeam(teamDictH,850)
+#test = optimalTeam(teamDictH,850)
 #cp = checkPossibility(teamDict,1,800)
-print (test)
+# print (test)
 
                 
                 
