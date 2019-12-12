@@ -27,7 +27,9 @@ def value(team):
     return the distance from the team cost to the budget,
     scaled by the team value.
     Between two teams with the same cost,
-    the one with higher value should have a higher evaluation.
+    the one with higher value should have a better evaluation.
+    
+    A better evaluation is LOWER. This is a minimization heuristic - minimize the distance from cost to budget.
     '''
     
     team_cost = cost(team)
@@ -35,9 +37,9 @@ def value(team):
     if (cost_difference == 0):
         return 0
     
-    #weight = mean([all_players[all_players.Name == name].Evaluation.values[0] for name in team.values()])
-    #val = cost_difference * weight
-    val = sum([all_players[all_players.Name == name].Evaluation.values[0] for name in team.values()])
+    weight = mean([all_players[all_players.Name == name].Evaluation.values[0] for name in team.values()])
+    val = cost_difference * weight
+    #val = sum([all_players[all_players.Name == name].Evaluation.values[0] for name in team.values()])
     
     return val
 
