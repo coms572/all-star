@@ -80,7 +80,7 @@ def optimalTeam(teamDictH,budget):
 
 import time
 start_time = time.time()
-print (start_time)
+#print (start_time)
 test = optimalTeam(teamDictH, budget)
 end_time = time.time()
 print("H backtracking search, budget %d: %s ms" % (budget, ((end_time - start_time) * 1000)))
