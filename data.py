@@ -2,12 +2,26 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import math
+import sys
 # import numpy as np
 
+#~~~~~~~~~~~~~~~~~~~~~~~CHANGE THE VARIABLES HERE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+budget = int(input("Budget:")) #Choose the budget
+
+#Choose the team from the TeamList.txt file. Correct name of the team should be mentioned.
+tName1 = input("Team1:") 
+tName2 = input("Team2:")
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 dataset = pd.read_csv("data.csv") #Do not spoil this dataset
 df=dataset
-budget = 900
+clubList = []
+for i in df.Club:
+    if i not in clubList and type(i)==str:
+        clubList.append(i)
 
+if tName1 not in clubList or tName2 not in clubList:      
+    sys.exit("Please enter correct teams and try again. Refer through TeamList.txt for correct names.\nExiting the program...")
+#choice = input("Choose the type of search:\nEnter 1 for backtracking\nEnter 2 for heuristic backtracking\nEnter 3 for local hill climb search\n")
 def compare_cost_measures():
     graph_df = pd.DataFrame(df[['Overall']])
     def m(s):
@@ -92,8 +106,7 @@ RightWingBack_h=RightWingBack.sort_values('PlayerHeuristic', ascending=False)[:1
 Striker['PlayerHeuristic']= Striker.Striker/Striker.Overall
 Striker_h=Striker.sort_values('PlayerHeuristic', ascending=False)[:18207]
 #Number of players:
-tName1 = 'Real Madrid'
-tName2 = 'FC Barcelona'
+
 team1 = pd.DataFrame(df[(df['Club'] == tName1)])
 team2 = pd.DataFrame(df[(df['Club'] == tName2)])
 teamDict = {}
@@ -235,8 +248,6 @@ rfa=np.array(teamDict['RF'])
 
 #print(teamDict[3][0])
 #print(getCost(teamDict,3,0))
-
-# Backtracking
 
 # The indices for each team position
 allstarTeamPositions = {

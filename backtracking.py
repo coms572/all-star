@@ -80,7 +80,7 @@ print('Overall: %d' % sum([allstarTeamPositions[pos][allstarTeamPositions[pos].N
 #test = optimalTeam(teamDict,900)
 #test = optimalTeam(teamDictH,850)
 #cp = checkPossibility(teamDict,1,800)
-# print (test)
+print (test)
 
                 
                 
