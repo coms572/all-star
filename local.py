@@ -134,7 +134,7 @@ import time
 start_time = time.time()
 t = localSearch(initial)
 end_time = time.time()
-print("Local search, budget %d: %s ms" % (budget, ((end_time - start_time) * 100)))
+print("Local search, budget %d: %s ms" % (budget, ((end_time - start_time) * 1000)))
 
 #print('initial: %s' % initial)
 #print('goal:    %s' % t)

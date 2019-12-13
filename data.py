@@ -6,7 +6,7 @@ import math
 
 dataset = pd.read_csv("data.csv") #Do not spoil this dataset
 df=dataset
-budget = 1000
+budget = 850
 
 def compare_cost_measures():
     graph_df = pd.DataFrame(df[['Overall']])

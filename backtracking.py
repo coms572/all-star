@@ -74,8 +74,9 @@ import time
 start_time = time.time()
 test = optimalTeam(teamDict,budget)
 end_time = time.time()
-print("Normal backtracking search, budget %d: %s ms" % (budget, ((end_time - start_time) * 100)))
-
+print("Normal backtracking search, budget %d: %s ms" % (budget, ((end_time - start_time) * 1000)))
+print('Skills: %d' % sum([allstarTeamPositions[pos][allstarTeamPositions[pos].Name == name].Skills.values[0] for pos, name in test.items()]))
+print('Overall: %d' % sum([allstarTeamPositions[pos][allstarTeamPositions[pos].Name == name].Overall.values[0] for pos, name in test.items()]))
 #test = optimalTeam(teamDict,900)
 #test = optimalTeam(teamDictH,850)
 #cp = checkPossibility(teamDict,1,800)
